@@ -53,38 +53,10 @@ Fireship did a great "SurrealDB in 100 Seconds" video.
 
 ## Install on Linux
 
-Installation is done with a single line of code using the official installation script
+Installation is available on MacOS, Linux, Windows, and via Docker. Check [the installation page](https://surrealdb.com/install) for more details. If you're using Linux like me, you can run this single line of code which executes the official installation script.
 
 ```sh
 curl -sSf https://install.surrealdb.com | sh
-```
-
-Unfortunately, at the time of writing, there is a bug in that install script that prevents the installation from running successfully. The fix is easy enough and there's already a pull request waiting in the official open-source repository.
-
-In the meantime, I was able to get around the bug with the following steps.
-
-Download the install script
-
-```sh
-curl -o install_surrealdb.sh https://install.surrealdb.com/
-```
-
-Edit line 58 to read:
-
-```sh
-if [ -v 1 ] && [ "$1" != "--nightly" ]; then
-```
-
-Make the script executable
-
-```sh
-chmod u+x install_surrealdb.sh
-```
-
-Execute the script
-
-```sh
-./install_surrealdb.sh
 ```
 
 By default, it will install SurrealDB to a subdirectory in your home directory. For example, my SurrealDB binary is located at `/home/travis/.surrealdb/surreal`.
