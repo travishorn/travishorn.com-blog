@@ -32,7 +32,7 @@ To download via BitTorrent, click **Magnet link for 2021.12.01**. The version mi
 
 If you aren't able or don't want to download via BitTorrent, scroll down to the **HTTP Direct Downloads** section and find a mirror in your geographical location. Once you find it, click on it.
 
-Click on **archlinux-2021.12.01-x86_64.iso** to download the ISO. Again, the version number might be different if you're reading this a little later after this article was published. That's okay.
+Click on **archlinux-2021.12.01-x86\_64.iso** to download the ISO. Again, the version number might be different if you're reading this a little later after this article was published. That's okay.
 
 # Prepare the installation media
 
@@ -112,7 +112,7 @@ Under **Attributes**, click the CD icon next to **Optical Drive**
 
 Click **Choose a disk file...**
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639756454863/7CAwLSLO5.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639756454863/7CAwLSLO5.png align="left")
 
 Select the Arch ISO you downloaded earlier and click **Open**
 
@@ -128,7 +128,7 @@ On a physical machine, you may need to press a specific key on the keyboard to a
 
 On VirtualBox, the virtual machine will automatically boot into the Arch installation.
 
-Make sure **Arch Linux install medium (x86_64, UEFI)** is selected and press **Enter**. This option is also selected automatically if you don't make a selection with 15 seconds.
+Make sure **Arch Linux install medium (x86\_64, UEFI)** is selected and press **Enter**. This option is also selected automatically if you don't make a selection with 15 seconds.
 
 Once the machine is booted, you'll see a prompt labeled `root@archiso ~#`
 
@@ -138,7 +138,7 @@ The default keymap is `us` and is probably the correct choice if you use a keybo
 
 List available keymaps
 
-```
+```bash
 ls /usr/share/kbd/keymaps/**/*.map.gz | less
 ```
 
@@ -146,7 +146,7 @@ Keep pressing Enter to scroll through the list. When you find your keymap, write
 
 Load your keymap (replace `de-latin1` with your actual keymap)
 
-```
+```bash
 loadkeys de-latin1
 ```
 
@@ -154,7 +154,7 @@ loadkeys de-latin1
 
 Make sure you have internet access by pinging a highly available domain like Google
 
-```
+```bash
 ping google.com
 ```
 
@@ -162,7 +162,7 @@ As long as some bytes are returned, you have internet access. Press **Ctrl + c**
 
 Synchronize your system clock
 
-```
+```bash
 timedatectl set-ntp true
 timedatectl status
 ```
@@ -173,22 +173,24 @@ Check that **NTP service** is **active** and **System clock synchronized** is **
 
 View disk information
 
-```
+```bash
 fdisk -l
 ```
 
 If you're installing on a physical machine with your own setup of hard disks, you'll have to use your own judgement on how to partition the disk(s). If you're following along with this guide on VirtualBox, you'll most likely have two disks listed:
 
-- The 10 GiB disk (or whatever size you set it to during virtual machine setup)
-- The "loop" disk. Arch sets this up automatically. It's not a "real" disk. You can ignore it.
+* The 10 GiB disk (or whatever size you set it to during virtual machine setup)
+    
+* The "loop" disk. Arch sets this up automatically. It's not a "real" disk. You can ignore it.
+    
 
 Make a note of the path of the 10 GiB disk. It's probably **/dev/sda**
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639756830850/yMPnRWCBs.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639756830850/yMPnRWCBs.png align="left")
 
 Start fdisk to partition that disk. (replace `/dev/sda` with the path to your 10 GiB disk, or the disk you on which you want to install Arch)
 
-```
+```bash
 fdisk /dev/sda
 ```
 
@@ -198,6 +200,8 @@ Type `g` and press **Enter** to create a new GPT disklabel
 
 Type `n` and press **Enter** to add a new partition
 
+Press **Enter** to accept the default partition type of **primary**
+
 Press **Enter** to accept the default partition number of **1**
 
 Press **Enter** to accept the default first sector of **2048**
@@ -206,11 +210,15 @@ Type `+550M` and press **Enter** to set the new partition's size to 550 MiB. Thi
 
 Type `t` and press **Enter** to change the partition's type
 
-Type `1` and press **Enter** to select **EFI System** as the type
+Type `uefi` and press **Enter** to select **EFI (FAT-12/16/32)** as the type
 
 ### Add a swap partition
 
+This section is probably not necessary if you are installing Arch Linux as a virtual machine. But it is very beneficial if you are installing it on bare hardware.
+
 Type `n` and press **Enter** to add a new partition
+
+Press **Enter** to accept the default partition type
 
 Press **Enter** to accept the default partition number
 
@@ -228,54 +236,56 @@ Type `19` and press **Enter** to select **Linux swap** as the type
 
 Type `n` and press **Enter** to add a new partition
 
+Press **Enter** to accept the default partition type
+
 Press **Enter** to accept the default partition number
 
 Press **Enter** to accept the default first sector
 
-Press **Enter** to select the default last sector. This will make the partition take up all the remaining space on the disk. Since this is the main filesystem partition, we don't need to change the partition type because it's already **Linux filesystem**
+Press **Enter** to select the default last sector. This will make the partition take up all the remaining space on the disk. Since this is the main filesystem partition, we don't need to change the partition type because it's already **Linux**
 
 With all the partitions configured, type `w` and press **Enter** to write the partition table information to the disk and exit.
 
 Make a FAT32 filesystem on the first partition (your EFI partition)
 
-```
+```bash
 mkfs.fat -F32 /dev/sda1
 ```
 
-Set up a swap partition on the second partition
+If you created a swap partition, set it up on the second partition
 
-```
+```bash
 mkswap /dev/sda2
 swapon /dev/sda2
 ```
 
-Make an EXT4 filesystem on the third (main) partition
+Make an EXT4 filesystem on the main partition. This may be `/dev/sda2` or `/dev/sda3` depending on if you set up a swap partition or not
 
-```
-mkfs.ext4 /dev/sda3
+```bash
+mkfs.ext4 /dev/sda2
 ```
 
 Mount the new partition
 
-```
-mount /dev/sda3 /mnt
+```bash
+mount /dev/sda2 /mnt
 ```
 
-Use pacstrap to install the base Arch operating system, the Linux kernel, and the firmware for Linux onto the mounted partition
+Use pacstrap to install the base Arch operating system, the Linux kernel, and the firmware for Linux onto the mounted partition. This may take a few minutes.
 
-```
+```bash
 pacstrap /mnt base linux linux-firmware
 ```
 
 Generate the filesystem table
 
-```
+```bash
 genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
 Change into the root directory of your new installation.
 
-```
+```bash
 arch-chroot /mnt
 ```
 
@@ -287,7 +297,7 @@ Some of the next steps require editing text files. You'll have to install a text
 
 Install Nano
 
-```
+```bash
 pacman -S nano
 ```
 
@@ -297,7 +307,7 @@ When asked to proceed with the installation, press **Enter** to accept the defau
 
 List all available timezone regions
 
-```
+```bash
 ls /usr/share/zoneinfo
 ```
 
@@ -305,7 +315,7 @@ Find the one that matches your region and write it down for later. For example, 
 
 List timezone cities in your region (replace `America` with your region)
 
-```
+```bash
 ls /usr/share/zoneinfo/America
 ```
 
@@ -313,19 +323,19 @@ Find the city that matches your timezone. It may not be the actual city you live
 
 Create a link between your timezone and the localtime file. This sets your timezone. Replace `America/Chicago` with the region and city that you wrote down earlier
 
-```
+```bash
 ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 ```
 
 Set the hardware clock to the system time
 
-```
+```bash
 hwclock -w
 ```
 
 Edit the locale generator file
 
-```
+```bash
 nano /etc/locale.gen
 ```
 
@@ -335,19 +345,19 @@ The `#` indicates that this line is a "comment" that should be ignored. Since we
 
 Repeat for all locales you will use. Most people will probably only use one. Most US English speakers will use `en_US.UTF-8 UTF-8`
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639757350256/0b-Bc9HjT.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639757350256/0b-Bc9HjT.png align="left")
 
 Press **Ctrl + x** to exit Nano. It will ask you if you want to save the file. Press **y** for **Yes**. It will ask for the file name. Press **Enter** to accept the default of `/etc/locale.gen`
 
 Generate locales
 
-```
+```bash
 locale-gen
 ```
 
 Edit the hostname file. It probably doesn't exist, yet. That's okay.
 
-```
+```bash
 nano /etc/hostname
 ```
 
@@ -357,19 +367,19 @@ Exit and save the file
 
 Edit the hosts file
 
-```
+```bash
 nano /etc/hosts
 ```
 
 There are already two lines in this file. Add the following three lines below them. Make sure to change `arch` to whatever hostname you saved in the steps earlier
 
-```
+```bash
 127.0.0.1 localhost
 ::1       localhost
 127.0.1.1 arch.localdomain arch
 ```
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639757454994/B-wjoMwd3.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639757454994/B-wjoMwd3.png align="left")
 
 Exit and save the file
 
@@ -377,7 +387,7 @@ Exit and save the file
 
 Change the root user's password
 
-```
+```bash
 passwd
 ```
 
@@ -385,13 +395,13 @@ Enter a strong and memorable password. For security reasons it won't appear like
 
 Create a new user. Replace `travis` below with your name or whatever username you want to primarily use
 
-```
+```bash
 useradd -m travis
 ```
 
 Change the new user's password
 
-```
+```bash
 passwd travis
 ```
 
@@ -399,7 +409,7 @@ Again, choose a strong and memorable password. It should be different than the r
 
 Add the user to specific groups with special privileges
 
-```
+```bash
 usermod -aG wheel,audio,video,optical,storage travis
 ```
 
@@ -409,19 +419,19 @@ When you want to have root-level access while logged in as a non-root user, you'
 
 Install sudo
 
-```
+```bash
 pacman -S sudo
 ```
 
 Edit the sudoers file
 
-```
+```bash
 EDITOR=nano visudo
 ```
 
 Scroll down and find the following line
 
-```
+```bash
 # %wheel ALL=(ALL) ALL
 ```
 
@@ -431,26 +441,26 @@ Un-comment that line by deleting the `#` at the beginning. Exit and save the fil
 
 Install the GRUB boot manager installer and other necessary tools for booting
 
-```
+```bash
 pacman -S grub efibootmgr
 ```
 
 Make a new EFI boot directory and mount your EFI partition to it
 
-```
+```bash
 mkdir /boot/EFI
 mount /dev/sda1 /boot/EFI
 ```
 
 Install GRUB
 
-```
+```bash
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 ```
 
 Generate the GRUB configuration file
 
-```
+```bash
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
@@ -458,14 +468,14 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 Install network manager and enable it
 
-```
+```bash
 pacman -S networkmanager
 systemctl enable NetworkManager
 ```
 
 If you're using VirtualBox, install and enable the VirtualBox guest utilities
 
-```
+```bash
 pacman -S virtualbox-guest-utils
 systemctl enable vboxservice.service
 ```
@@ -474,19 +484,19 @@ systemctl enable vboxservice.service
 
 Exit out of arch-chroot
 
-```
+```bash
 exit
 ```
 
 Unmount the live image
 
-```
+```bash
 umount -l /mnt
 ```
 
 Shut the machine down
 
-```
+```bash
 shutdown now
 ```
 
@@ -496,11 +506,11 @@ In VirtualBox, click **Settings**
 
 Click **Storage**
 
-Click to select the optical drive. It has the icon of a CD and may be named something like **archlinux-2021.12.01-x86_64.iso**
+Click to select the optical drive. It has the icon of a CD and may be named something like **archlinux-2021.12.01-x86\_64.iso**
 
 Under **Attributes**, click the icon of a CD and then click **Remove Disc from Virtual Drive**
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639757814217/9kyiqEdy2.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1639757814217/9kyiqEdy2.png align="left")
 
 Click **OK**
 
@@ -518,11 +528,11 @@ There's no GUI and almost no tools to use right now. That's what makes Arch grea
 
 If you're done with the machine for the day, you can shut it down with the same command we used earlier. But since you're not logged in as **root**, you'll need to use **sudo**
 
-```
+```bash
 sudo shutdown now
 ```
 
-As stated earlier, sudo lets a non-root user run root-level commands as long as they're part of the **wheel** group.  Each session, sudo will ask you to re-enter your password as a security measure.
+As stated earlier, sudo lets a non-root user run root-level commands as long as they're part of the **wheel** group. Each session, sudo will ask you to re-enter your password as a security measure.
 
 ---
 
