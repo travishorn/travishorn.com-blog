@@ -3,7 +3,7 @@ title: "Conquering the #12in23 Challenge: Tackling Mechanical March with Rust"
 datePublished: Tue Mar 07 2023 20:01:40 GMT+0000 (Coordinated Universal Time)
 cuid: cleyofvi8000009ks1m6vhhnw
 slug: conquering-the-12in23-challenge-tackling-mechanical-march-with-rust
-cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1678219538331/7e858e44-2b34-43e6-a2c8-5a653c57db31.png
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1680706038121/583193f2-1ca6-4f8b-8d66-81a2c035560c.png
 tags: challenge, rust, rust-lang, 12in23, low-level-programming
 
 ---
