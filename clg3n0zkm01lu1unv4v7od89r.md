@@ -3,7 +3,7 @@ title: "Analytical April: Learning Python for Data Science"
 datePublished: Wed Apr 05 2023 12:00:38 GMT+0000 (Coordinated Universal Time)
 cuid: clg3n0zkm01lu1unv4v7od89r
 slug: analytical-april-learning-python-for-data-science
-cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1680638789639/94ddfe13-b3dc-48b8-9ba7-0b63d8c4e00f.png
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1680706011129/25091e99-ca58-48f2-87f7-ba220e31c229.png
 tags: python, data-science, programming-languages, exercism, 12in23
 
 ---
