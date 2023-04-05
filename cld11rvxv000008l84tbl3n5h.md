@@ -1,9 +1,9 @@
 ---
-title: "#12in23 Challenge - January - Kotlin"
+title: "Learn a New Programming Language Every Month with Exercism's #12in23 Challenge"
 datePublished: Wed Jan 18 2023 02:31:03 GMT+0000 (Coordinated Universal Time)
 cuid: cld11rvxv000008l84tbl3n5h
-slug: 12in23-challenge-january-kotlin
-cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1673114116431/8c98be0c-9f84-49cc-859b-15bb12e169a7.png
+slug: learn-a-new-programming-language-every-month-with-exercisms-12in23-challenge
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1680706146728/bbe3c9ab-ec78-4541-91c0-37d74850ec68.png
 tags: challenge, java, android, kotlin
 
 ---
