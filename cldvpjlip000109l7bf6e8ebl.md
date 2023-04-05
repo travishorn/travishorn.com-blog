@@ -1,9 +1,9 @@
 ---
-title: "#12in23 Challenge - February - Elixir"
+title: "Functional February: Exploring Elixir for Exercism's #12in23 Challenge"
 datePublished: Wed Feb 08 2023 13:29:32 GMT+0000 (Coordinated Universal Time)
 cuid: cldvpjlip000109l7bf6e8ebl
-slug: 12in23-challenge-february-elixir
-cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1675616721449/4c74a47c-265c-46d9-a03c-6105ce4c529c.png
+slug: functional-february-exploring-elixir-for-exercisms-12in23-challenge
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1680706069746/a81b7853-6c7f-4328-a5b8-379f305d0a99.png
 tags: challenge, elixir, functional-programming, 12in23
 
 ---
