@@ -46,7 +46,7 @@ hello_world('Hello, World!').
 
 With Hello, World! out of the way, let's get started solving 5 exercises so we can complete this month's challenge.
 
-I'll be completed each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
+I'll be tackling each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
 
 The 5 exercises that exemplify mindshifting languages are Acronym, Isogram, Roman Numerals, Raindrops, and Space Age. Let's start working on those.
 
@@ -183,7 +183,7 @@ With those five exercises in Prolog complete, I'm finished with Mindshifting May
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1683679661690/c4959366-ea53-4cc2-9692-c64495370ae5.png align="center")
 
-In addition, I've published solutions to all 15 of the [featured exercises](https://forum.exercism.org/t/new-12in23-badge-for-completing-all-the-things/4183) so far. This progress brings me closer to the exclusive year-long #12in23 badge.
+In addition, I've published solutions to all 20 of the [featured exercises](https://forum.exercism.org/t/new-12in23-badge-for-completing-all-the-things/4183) so far. This progress brings me closer to the exclusive year-long #12in23 badge.
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1683679746976/170ae3e9-7c72-4039-bbb5-d8c63bbcb9d9.png align="center")
 
