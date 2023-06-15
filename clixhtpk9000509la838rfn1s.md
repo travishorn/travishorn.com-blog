@@ -43,7 +43,7 @@ I did my tests by...
 4. Running the tests with `(hello-world-test:run-tests)`
     
 
-I'll be completed each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
+I'll be tackling each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
 
 The 5 exercises that exemplify the summer of sexps languages are Leap, Two-Fer, Difference of Squares, Robot Name, and Matching Brackets. Let's start working on those.
 
@@ -239,7 +239,7 @@ With those five exercises in Common Lisp complete, I'm finished with the Summer 
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1686849506861/3c12b904-72ad-4102-a539-6c9086049744.png align="center")
 
-In addition, I've published solutions to all 15 of the [**featured exercises**](https://forum.exercism.org/t/new-12in23-badge-for-completing-all-the-things/4183) so far. This progress brings me closer to the exclusive year-long #12in23 badge.
+In addition, I've published solutions to all 25 of the [**featured exercises**](https://forum.exercism.org/t/new-12in23-badge-for-completing-all-the-things/4183) so far. This progress brings me closer to the exclusive year-long #12in23 badge.
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1686849487068/59573ad0-fa0e-44f8-8440-5618531da981.png align="center")
 
