@@ -50,7 +50,7 @@ def hello():
 
 With Hello, World! out of the way, let's get started solving 5 exercises so we can complete this month's challenge.
 
-I'll be completed each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
+I'll be tackling each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
 
 The 5 exercises that exemplify Analytical languages are ETL, Largest Series Product, Saddle Points, Sum Of Multiples, and Word Count. Let's start working on those.
 
