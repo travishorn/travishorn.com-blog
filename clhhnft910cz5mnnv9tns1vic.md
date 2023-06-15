@@ -48,7 +48,7 @@ With Hello, World! out of the way, let's get started solving 5 exercises so we c
 
 I'll be completed each of the 5 "featured exercises." These exercises are chosen by Exercism because they particularly highlight a scenario where this month's language theme is beneficial. While you can complete the monthly challenge by completing any 5 exercises, you will get an extra-special "year-long" #12in23 badge for completing the featured exercises.
 
-The 5 exercises that exemplify Analytical languages are Acronym, Isogram, Roman Numerals, Raindrops, and Space Age. Let's start working on those.
+The 5 exercises that exemplify mindshifting languages are Acronym, Isogram, Roman Numerals, Raindrops, and Space Age. Let's start working on those.
 
 ![Acronym](https://dg8krxphbh767.cloudfront.net/exercises/acronym.svg align="center")
 
