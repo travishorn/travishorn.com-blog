@@ -153,3 +153,7 @@ The style of the form could be significantly improved. You'll probably want to s
 Some sort of confirmation that the file upload was successful is necessary. [I recommend redirecting to a page with a success message](https://kit.svelte.dev/docs/form-actions#anatomy-of-an-action-redirects).
 
 Writing the file to disk is great, but you'll probably want to reference it later somewhere in your app. For that, I recommend saving the filename to a database alongside some relevant information; perhaps the original filename, the user account who uploaded it, the date and time, etc.
+
+All of the code in this article is available in a working example on GitHub:
+
+%[https://github.com/travishorn/skupload]
