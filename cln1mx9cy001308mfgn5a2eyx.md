@@ -78,7 +78,7 @@ Open a web browser and navigate to http://\[your server's IP address/hostname\]:
 > 3. you have port 3000 forwarded
 >     
 
-This is a simple setup that isn't fault-tolerant or feasible to manage. You may want to manage your Node.js processes using a manager like PM2. I have an upcoming article on this topic in the works.
+This is a simple setup that isn't fault-tolerant or feasible to manage. I have another article on [managing your Node.js processes using a manager like PM2](https://travishorn.com/how-to-manage-nodejs-processes-with-pm2) that fixes this problem.
 
 Deploying Next.js apps on a Linux server opens up a world of possibilities for scalable and performant web applications. By following the steps outlined in this guide, you can confidently serve your Next.js app on a Linux server, leveraging its powerful features. Armed with this knowledge, you are now equipped to deploy your Next.js app and deliver an exceptional user experience. Happy serving!
 
