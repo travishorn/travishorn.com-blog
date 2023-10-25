@@ -117,7 +117,7 @@ If you make changes to the code, the process for updating the app is...
 6. Reload the pm2 processes
     
 
-You can automate steps 2-6 with continuous integration, which I will go over in a future article.
+That seems like a lot of work, but you can automate steps 2-6 with continuous integration, which I cover in another article: [Rolling Your Own Continuous Deployment with Node.js, Git, PM2, and Linux](https://travishorn.com/rolling-your-own-continuous-deployment-with-nodejs-git-pm2-and-linux).
 
 PM2 is a powerful tool for managing Node.js processes that can help you streamline your development workflow and improve the performance of your applications. By following the steps outlined in this article, you should now have a good understanding of how to install and use PM2 to manage your Node.js processes. Whether you’re working on a small project or a large-scale application, PM2 can help you keep your Node.js processes running smoothly and efficiently.
 
