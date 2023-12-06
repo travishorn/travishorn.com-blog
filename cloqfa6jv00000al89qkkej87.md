@@ -71,7 +71,7 @@ In your web browser, visit http://\[your server's IP address/hostname\]. You sho
 
 * All requests to the web application should go through port 80 (or 443 if you set up HTTPS/SSL later). However, the application is still listening on port 3000. Use a firewall to block external requests to port 3000. [I have a full guide on using nftables to set firewall rules this way](https://travishorn.com/firewall-configuration-with-nftables).
     
-* Web sites and applications should be served over HTTPS with SSL. You can configure nginx to handle this. I have an upcoming guide on this, as well. Check back soon.
+* Web sites and applications should be served over HTTPS with SSL. You can configure nginx to handle this. I have a [guide on setting up nginx with HTTPS/SSL](https://travishorn.com/configuring-httpstls-on-nginx-a-complete-guide-for-securing-web-traffic), as well.
     
 
 Congratulations! You now have a fully functional reverse proxy server using nginx. With this setup, you can manage and distribute web traffic with ease. If you have any questions or comments, feel free to leave them below.
