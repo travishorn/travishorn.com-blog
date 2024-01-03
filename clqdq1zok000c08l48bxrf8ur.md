@@ -90,6 +90,6 @@ sudo systemctl restart mariadb
 
 Setting up MariaDB establishes a reliable and scalable place to store data for your applications. By following the steps outlined in this guide, you have learned how to install MariaDB, create database users, grant privileges, and enable remote connections. Whether you're building a small-scale application or a large enterprise solution, MariaDB's flexibility and feature-rich capabilities make it a solid choice for your database needs. Hopefully, this article can help you get started so you can work toward unlocking the full potential of MariaDB and your applications.
 
-Before you get too far, it would be wise to set up a backup and recovery plan. I will publish an article soon on that topic.
+Before you get too far, it would be wise to [set up a backup and recovery plan](https://travishorn.com/comprehensive-guide-backing-up-and-recovering-data-in-mariadb).
 
 Cover photo by [Amritansh Dubey](https://unsplash.com/@amritanshdubey?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/2XVKj6Ui1bw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
