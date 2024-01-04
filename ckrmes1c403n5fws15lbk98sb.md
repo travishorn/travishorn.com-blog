@@ -37,7 +37,7 @@ To start, create a file called `index.html` with the following boilerplate code:
 </html>
 ```
 
-As far as CSS goes, we’ll simply use [Bootstrap 4](http://getbootstrap.com/docs/4.0). Add this line to the `&lt;head&gt;` section.
+As far as CSS goes, we’ll simply use [Bootstrap 4](http://getbootstrap.com/docs/4.0). Add this line to the `head` section.
 
 ```svelte
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css">
@@ -49,14 +49,14 @@ Leaflet requires its own styles. Include its stylesheet, as well.
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css">
 ```
 
-In the `&lt;body&gt;` section, include both Vue and Leaflet.
+In the `body` section, include both Vue and Leaflet.
 
 ```svelte
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 ```
 
-All libraries are now loaded! We can begin coding our app. Again, in the `&lt;body&gt;` section, above the two `&lt;script&gt;` tags, create a `&lt;div&gt;` like so.
+All libraries are now loaded! We can begin coding our app. Again, in the `body` section, above the two `script` tags, create a `div` like so.
 
 ```svelte
 <div id="app" class="container">
@@ -64,9 +64,9 @@ All libraries are now loaded! We can begin coding our app. Again, in the `&lt;bo
 </div>
 ```
 
-We gave this `&lt;div&gt;` an `id` so we can bind our Vue app to it and we gave it the `container` `class` so we can use Bootstrap’s grid system within it.
+We gave this `div` an `id` so we can bind our Vue app to it and we gave it the `container` `class` so we can use Bootstrap’s grid system within it.
 
-Inside that `&lt;div&gt;`, set up a row and two columns.
+Inside that `div`, set up a row and two columns.
 
 ```svelte
 <div id="app" class="container">
@@ -88,13 +88,13 @@ We now have one row that contains two columns. The first column takes up 9 (out 
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410546916/Geq6O7BIP.png align="left")
 
-The first column will contain the map. Add a new `&lt;div&gt;` inside it to indicate where the map should go.
+The first column will contain the map. Add a new `div` inside it to indicate where the map should go.
 
 ```svelte
 <div id="map" class="map"></div>
 ```
 
-This `&lt;div&gt;` has an `id` that we’ll use to bind our Leaflet map. It also contains a `class` that we can reference in CSS.
+This `div` has an `id` that we’ll use to bind our Leaflet map. It also contains a `class` that we can reference in CSS.
 
 We’ll leave this template as it is for right now and come back to it later.
 
@@ -102,9 +102,9 @@ Leaflet requires our map element to have a height. We can do this three ways:
 
 * Directly on the element with a `style` attribute
     
-* In a `&lt;style&gt;` tag inside the `&lt;head&gt;` section
+* In a `style` tag inside the `head` section
     
-* Create a new CSS stylesheet (.css file) and link it in the `&lt;head&gt;` section
+* Create a new CSS stylesheet (.css file) and link it in the `head` section
     
 
 The first one is the easiest, but the second or third options are better practices. Personally, I recommend the third option. For that, simply create a new file call `styles.css`
@@ -113,7 +113,7 @@ The first one is the easiest, but the second or third options are better practic
 .map { height: 600px; }
 ```
 
-Then, link it in the `&lt;head&gt;` section below Bootstrap.
+Then, link it in the `head` section below Bootstrap.
 
 ```svelte
 <link rel="stylesheet" href="styles.css">
@@ -135,7 +135,7 @@ new Vue({
 });
 ```
 
-Then, include it in the `&lt;body&gt;` section, below the existing `&lt;script&gt;` tags.
+Then, include it in the `body` section, below the existing `script` tags.
 
 ```svelte
 <script src="app.js"></script>
@@ -187,7 +187,7 @@ this.tileLayer = L.tileLayer(
 this.tileLayer.addTo(this.map);
 ```
 
-The first line is simple. It uses Leaflet (the `L` object) to bind a new map to the `&lt;div id="map"&gt;` element, then sets the view to be at latitude 38.63 and longitude -90.23 with a zoom level of 12. This sets the map to be zoomed in right over Saint Louis, MO.
+The first line is simple. It uses Leaflet (the `L` object) to bind a new map to the `div id="map"` element, then sets the view to be at latitude 38.63 and longitude -90.23 with a zoom level of 12. This sets the map to be zoomed in right over Saint Louis, MO.
 
 The second line is more complicated. It sets the tile layer, which you can think of as a collection of images which outline streets, rivers, city names, and other visual aspects of a map.
 
@@ -495,7 +495,7 @@ features: [
 ],
 ```
 
-Back in our HTML template, we’ll create a checkbox for each layer. This code goes inside that second column ( `&lt;div class="col-md-3"&gt;`)
+Back in our HTML template, we’ll create a checkbox for each layer. This code goes inside that second column ( `div class="col-md-3"`)
 
 ```svelte
 <div
@@ -507,7 +507,7 @@ Back in our HTML template, we’ll create a checkbox for each layer. This code g
 </div>
 ```
 
-The code above creates a new `&lt;div class="form-check"&gt;` for each layer in the layers array.
+The code above creates a new `div class="form-check"` for each layer in the layers array.
 
 This div contains a `label` and an `input` element.
 
