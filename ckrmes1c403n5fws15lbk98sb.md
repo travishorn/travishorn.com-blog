@@ -8,7 +8,6 @@ tags: javascript, web-development, data-visualisation-1
 
 ---
 
-
 This post will cover the basics of interactive maps using Vue.js and Leaflet.
 
 If you’ve never heard of Vue, it’s a popular front-end framework for building user interfaces. If you’ve never heard of Leaflet, it’s a modern JavaScript library that makes working with maps easy.
@@ -16,14 +15,15 @@ If you’ve never heard of Vue, it’s a popular front-end framework for buildin
 Today, we’ll use those frameworks to build a web app with a couple components:
 
 * An interactive geographic map that users can pan and zoom
-
+    
 * A collection of “layer” checkboxes that users can toggle to view markers and polygons on the map
+    
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410545110/5fVRBsZi0.jpeg)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410545110/5fVRBsZi0.jpeg align="left")
 
 To start, create a file called `index.html` with the following boilerplate code:
 
-```
+```svelte
 <!doctype html>
 <html lang="en">
   <head>
@@ -37,43 +37,38 @@ To start, create a file called `index.html` with the following boilerplate code:
 </html>
 ```
 
-
 As far as CSS goes, we’ll simply use [Bootstrap 4](http://getbootstrap.com/docs/4.0). Add this line to the `&lt;head&gt;` section.
 
+```svelte
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css">
 ```
-<link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css](https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css)">
-```
-
 
 Leaflet requires its own styles. Include its stylesheet, as well.
 
+```svelte
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css">
 ```
-<link rel="stylesheet" href="[https://unpkg.com/leaflet@1.2.0/dist/leaflet.css](https://unpkg.com/leaflet@1.2.0/dist/leaflet.css)">
-```
-
 
 In the `&lt;body&gt;` section, include both Vue and Leaflet.
 
+```svelte
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 ```
-<script src="[https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js](https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js)"></script>
-<script src="[https://unpkg.com/leaflet@1.2.0/dist/leaflet.js](https://unpkg.com/leaflet@1.2.0/dist/leaflet.js)"></script>
-```
-
 
 All libraries are now loaded! We can begin coding our app. Again, in the `&lt;body&gt;` section, above the two `&lt;script&gt;` tags, create a `&lt;div&gt;` like so.
 
-```
+```svelte
 <div id="app" class="container">
   <!-- The rest of the app goes here -->
 </div>
 ```
 
-
 We gave this `&lt;div&gt;` an `id` so we can bind our Vue app to it and we gave it the `container` `class` so we can use Bootstrap’s grid system within it.
 
 Inside that `&lt;div&gt;`, set up a row and two columns.
 
-```
+```svelte
 <div id="app" class="container">
   <div class="row">
 
@@ -89,17 +84,15 @@ Inside that `&lt;div&gt;`, set up a row and two columns.
 </div>
 ```
 
-
 We now have one row that contains two columns. The first column takes up 9 (out of 12) column widths. The second column takes up 3.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410546916/Geq6O7BIP.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410546916/Geq6O7BIP.png align="left")
 
 The first column will contain the map. Add a new `&lt;div&gt;` inside it to indicate where the map should go.
 
-```
+```svelte
 <div id="map" class="map"></div>
 ```
-
 
 This `&lt;div&gt;` has an `id` that we’ll use to bind our Leaflet map. It also contains a `class` that we can reference in CSS.
 
@@ -108,30 +101,29 @@ We’ll leave this template as it is for right now and come back to it later.
 Leaflet requires our map element to have a height. We can do this three ways:
 
 * Directly on the element with a `style` attribute
-
+    
 * In a `&lt;style&gt;` tag inside the `&lt;head&gt;` section
-
+    
 * Create a new CSS stylesheet (.css file) and link it in the `&lt;head&gt;` section
+    
 
 The first one is the easiest, but the second or third options are better practices. Personally, I recommend the third option. For that, simply create a new file call `styles.css`
 
-```
+```svelte
 .map { height: 600px; }
 ```
 
-
 Then, link it in the `&lt;head&gt;` section below Bootstrap.
 
-```
+```svelte
 <link rel="stylesheet" href="styles.css">
 ```
-
 
 That’s really the only custom style we need for the basic setup. But feel free to add additional styles in this file later.
 
 Now we’re ready to write some JavaScript. Create a new file called `app.js`.
 
-```
+```svelte
 new Vue({
   el: '#app',
 
@@ -143,17 +135,15 @@ new Vue({
 });
 ```
 
-
 Then, include it in the `&lt;body&gt;` section, below the existing `&lt;script&gt;` tags.
 
-```
+```svelte
 <script src="app.js"></script>
 ```
 
-
 Inside the `data` object, add these three properties.
 
-```
+```svelte
 data: {
   map: null,
   tileLayer: null,
@@ -161,32 +151,29 @@ data: {
 },
 ```
 
-
 `map` will become a reference to the Leaflet map, `tileLayer` will become a reference to the tile layer (actual map visuals), and the `layers` array will eventually contain objects for each of our toggle-able layers.
 
 In the `mounted()` function, execute `this.initMap()` and `this.initLayers()`.
 
-```
+```svelte
 mounted() {
   this.initMap();
   this.initLayers();
 },
 ```
 
-
 Neither of these methods exist, yet. Create them in the `methods` object.
 
-```
+```svelte
 methods: {
   initMap() {},
   initLayers() {},
 },
 ```
 
-
 Inside `initMap()`, we set the `this.map` and `this.tileLayer` properties. Then, add the tile layer to the map.
 
-```
+```svelte
 this.map = L.map('map').setView([38.63, -90.23], 12);
 
 this.tileLayer = L.tileLayer(
@@ -200,7 +187,6 @@ this.tileLayer = L.tileLayer(
 this.tileLayer.addTo(this.map);
 ```
 
-
 The first line is simple. It uses Leaflet (the `L` object) to bind a new map to the `&lt;div id="map"&gt;` element, then sets the view to be at latitude 38.63 and longitude -90.23 with a zoom level of 12. This sets the map to be zoomed in right over Saint Louis, MO.
 
 The second line is more complicated. It sets the tile layer, which you can think of as a collection of images which outline streets, rivers, city names, and other visual aspects of a map.
@@ -208,18 +194,19 @@ The second line is more complicated. It sets the tile layer, which you can think
 The tiles we use here are a free services of [Carto](https://carto.com/). First we pass the URL template for the tiles, then an options object. The options we set here are:
 
 * maxZoom — specifies how far the user should be able to zoom in.
-
+    
 * attribution — When using Carto’s tiles, you must give attribution. Basically this adds a description of the copyrights associated with these tiles.
+    
 
 For the first time, our app should actually look like something. If you load `index.html` in your browser, you should see a map of Saint Louis, MO.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410548434/GGrhRxLjM.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410548434/GGrhRxLjM.png align="left")
 
 Now for the toggle-able layers.
 
 Inside the `layers` property, add a new object to describe our layer.
 
-```
+```svelte
 data: {
   map: null,
   tileLayer: null,
@@ -234,20 +221,20 @@ data: {
 },
 ```
 
-
 Each layer will have…
 
-* `id `— Just a unique identifier for the layer. This can be as simple as an incrementing integer
-
+* `id` — Just a unique identifier for the layer. This can be as simple as an incrementing integer
+    
 * `name` — The name of the layer that we can use to display in the app
-
+    
 * `active` — Whether or not the user has toggled the layer on
-
+    
 * `features` — An array of objects that define markers or polygons in the layer
+    
 
 The objects in the features array look like this:
 
-```
+```svelte
 features: [
   {
     id: 0,
@@ -258,20 +245,20 @@ features: [
 ],
 ```
 
-
 Each feature will have…
 
 * `id` — Another unique identifier. Note that it only has to be unique to other features.
-
+    
 * `name` — The name of the feature (a restaurant in this case) to display in the app
-
+    
 * `type` — In this app, features can either be markers or polygons. A marker will appear as a “tack” on the map. A polygon will appear as a semi-transparent colored shape.
-
+    
 * `coords` — The latitude and longitude for the feature
+    
 
 Below you will find a collection of restaurant feature objects that you can copy & paste. These are just some sample restaurants from around the Saint Louis area.
 
-```
+```svelte
 {
   id: 0,
   name: 'Bogart\'s Smokehouse',
@@ -328,10 +315,9 @@ Below you will find a collection of restaurant feature objects that you can copy
 },
 ```
 
-
 The second layer we’ll add is the boundaries for the City of Saint Louis and St. Louis County. Add this new layer.
 
-```
+```svelte
 layers: [
   {
     id: 0,
@@ -348,16 +334,16 @@ layers: [
 ],
 ```
 
-
 This layer will have two features. Both of them are polygons. Polygon features are nearly identical to marker features except…
 
 * `type` is `'polygon'` instead of `'marker'`
-
+    
 * `coords` is an array of arrays, instead of just a single array. This is because the polygons are more than just a single point on a map. They are a collection of points that define a shape.
+    
 
 You can just copy & paste these two features.
 
-```
+```svelte
 features: [
   {
     id: 0,
@@ -509,10 +495,9 @@ features: [
 ],
 ```
 
-
 Back in our HTML template, we’ll create a checkbox for each layer. This code goes inside that second column ( `&lt;div class="col-md-3"&gt;`)
 
-```
+```svelte
 <div
   class="form-check"
   v-for="layer in layers"
@@ -522,12 +507,11 @@ Back in our HTML template, we’ll create a checkbox for each layer. This code g
 </div>
 ```
 
-
 The code above creates a new `&lt;div class="form-check"&gt;` for each layer in the layers array.
 
 This div contains a `label` and an `input` element.
 
-```
+```svelte
 <label class="form-check-label">
   <input
     class="form-check-input"
@@ -539,7 +523,6 @@ This div contains a `label` and an `input` element.
 </label>
 ```
 
-
 In the code above, `v-model` binds the `active` property to the checkbox’s value. This means that when `active === true` the checkbox will be checked and vice-versa.
 
 Also, when the value of the checkbox is changed, `layerChanged()` is called with the `id` of the layer and whether is it now active or not. We haven’t created this function, yet, but we’ll get to it.
@@ -548,7 +531,7 @@ Finally, we use Vue’s text interpolation to place the name of the layer inside
 
 That’s it for the HTML template. Back in JavaScript, add a `layerChanged()` function to the `methods` object.
 
-```
+```svelte
 methods: {
   initMap() { /* snip */ },
   initLayers() { /* snip */ },
@@ -556,16 +539,15 @@ methods: {
 },
 ```
 
-
 At this point, if you save and load the page, there should be a checkbox for each layer next to the map.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410550397/nuUU7GptC.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410550397/nuUU7GptC.png align="left")
 
 Before we can write the code to toggle the layers, we have to initialize them. It’s time to code the `initLayers()` method. The basic idea behind this method is to add Leaflet objects for each feature.
 
 Loop through each layer.
 
-```
+```svelte
 initLayers() {
   this.layers.forEach((layer) => {
     // Initialize the layer
@@ -573,64 +555,57 @@ initLayers() {
 },
 ```
 
-
 In the loop, create two arrays. One for all the marker features and one for all the polygon features in the layer.
 
-```
+```svelte
 const markerFeatures = layer.features.filter(feature => feature.type === 'marker');
 
 const polygonFeatures = layer.features.filter(feature => feature.type === 'polygon');
 ```
 
-
 Now loop over the marker features and create Leaflet objects for each.
 
-```
+```svelte
 markerFeatures.forEach((feature) => {
   feature.leafletObject = L.marker(feature.coords)
     .bindPopup(feature.name);
 });
 ```
 
-
 Loop over the polygon features and create Leaflet objects for them, too.
 
-```
+```svelte
 polygonFeatures.forEach((feature) => {
   feature.leafletObject = L.polygon(feature.coords)
     .bindPopup(feature.name);
 });
 ```
 
-
 All features in all layers now contain a `leafletObject` that we can use. With all layers “initialized,” we can finally code the `layerChanged()` method.
 
-```
+```svelte
 layerChanged(layerId, active) {
   /* Show or hide the features in the layer */
 },
 ```
 
-
 First, get a reference to the layer that was toggled.
 
-```
+```svelte
 const layer = this.layers.find(layer => layer.id === layerId);
 ```
 
-
 Now loop over the features in the layer.
 
-```
+```svelte
 layer.features.forEach((feature) => {
   /* Show or hide the feature depending on the active argument */
 });
 ```
 
-
 Inside the loop, check to see if the layer was made active. If so, add the feature to the map. Otherwise, remove it from the map.
 
-```
+```svelte
 if (active) {
   feature.leafletObject.addTo(this.map);
 } else {
@@ -638,22 +613,21 @@ if (active) {
 }
 ```
 
-
 That’s it! When you check the Restaurants checkbox, markers appear for each restaurant.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410552321/USP2CB4Bi.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410552321/USP2CB4Bi.png align="left")
 
 Similarly, when you check the City/County Boundaries checkbox, the polygons for each boundary are shown.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410554404/hH0ksxAoO.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410554404/hH0ksxAoO.png align="left")
 
 Of course, you can also check both at the same time.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410556421/aRzLR3e8AY.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410556421/aRzLR3e8AY.png align="left")
 
 And because we bound popups to each feature, clicking one of them will pop up the name of that feature.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410558604/e-Q-YLBOP.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1627410558604/e-Q-YLBOP.png align="left")
 
 Adding new layers and features are as easy as adding new objects to the appropriate array. Just follow the format of the already existing ones.
 
