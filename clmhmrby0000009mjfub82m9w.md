@@ -69,7 +69,33 @@ With that done, your operating system is now aware of any updates to Node.js. Yo
 sudo apt upgrade
 ```
 
-This will upgrade all packages on your system, *including Node.js*.
+This will upgrade all packages on your system as usual, which now *includes Node.js*.
+
+### Upgrading Major Versions
+
+Since the source list we told APT about only includes version Node.js 18 (or whichever version you chose), it will only upgrade Node.js within that major release. This is a safe practice to adhere to. However, if you are ready to upgrade to a newer major release, follow the steps below.
+
+First, remove the current version of Node.js.
+
+```bash
+sudo apt remove nodejs
+```
+
+Remove the NodeSource APT list for the current version.
+
+```bash
+sudo rm /etc/apt/sources.list.d/nodesource.list
+```
+
+Set up the new source and install Node.js.
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+```
+
+Notice the `20` in the command above. This means APT will now manage Node.js versions 20.x from now on. Change `20` to whichever version you want to install.
+
+## Conclusion
 
 You are now ready to run and serve Node.js apps. You may choose to write and/or run completely custom Node.js apps, or you may choose to go with a framework like Next.js.
 
