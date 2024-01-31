@@ -16,13 +16,15 @@ Go to [https://prometheus.io/download/](https://prometheus.io/download/).
 
 In the **Operating System** dropdown menu, choose **linux**.
 
-In the **Architecture** dropdown menu, choose **amd64**.
+In the **Architecture** dropdown menu, choose **amd64** (or whichever architecture your server uses).
 
 In the **prometheus** section, find the version that is labeled **LTS**.
 
 Copy the listed URL. It will be labeled something like **prometheus-2.37.6.linux-amd64.tar.gz**.
 
-In your terminal, download the file at the copied URL.
+> The exact filename will likely differ depending on when you're reading this.
+
+In your terminal, use `wget` to download the file at the copied URL.
 
 ```bash
 wget https://github.com/prometheus/prometheus/releases/download/v2.37.6/prometheus-2.37.6.linux-amd64.tar.gz
@@ -36,7 +38,7 @@ The file will be downloaded to your machine. Unzip it.
 tar xvfz prometheus-2.37.6.linux-amd64.tar.gz
 ```
 
-To stay organized, remove the compressed file as it's no longer needed.
+To stay organized, you can remove the compressed file as it's no longer needed.
 
 ```bash
 rm prometheus-2.37.6.linux-amd64.tar.gz
@@ -104,9 +106,9 @@ Verify it works by going to http://\[your server's IP address/hostname\]:9090.
 
 Right now, anyone who visits the URL will see all monitoring information. This could leak sensitive data. Prometheus has built-in basic authentication available for configuration.
 
-First, a password hash must be created. You can use Python for this. Debian Linux comes preinstalled with Python 3.
+First, a password hash must be created. There are many methods to do this. I suggest using Python for this as many Linux distributions come preinstalled with Python 3.
 
-Install `python3-bcrypt`.
+Install `python3-bcrypt`. It is a 3rd-party Python package that helps creating bcrypt hashes.
 
 ```bash
 sudo apt update
@@ -142,6 +144,8 @@ basic_auth_users:
 ```
 
 For the username, choose any username you like. For the password hash, paste the password hash you copied earlier.
+
+> The brackets \[\] are only there for demonstration and should not be included in your file.
 
 Edit `/etc/systemd/system/prometheus.service` to change the `ExecStart` line.
 
@@ -278,10 +282,10 @@ Restart the Prometheus service.
 sudo systemctl restart prometheus
 ```
 
-Verify it works by going to `http://[your server IP address or hostname:9090/graph?g0.expr=rate(node_disk_io_time_seconds_total[1m])`. That page will show you the rate of I/O operations of your system disks.
+Verify it works by going to `http://[your server IP address]:9090/graph?g0.expr=rate(node_disk_io_time_seconds_total[1m])`. That page will show you the rate of I/O operations of your system disks.
 
 Repeat the process to add as many exporters as you need to fulfill your server monitoring needs.
 
-Implementing Prometheus as your Linux server monitoring solution equips you with powerful tools to keep your infrastructure in check. By following the steps outlined in this guide, you can effectively set up Prometheus, configure it to monitor essential metrics, strengthen security through authentication, and expand monitoring capabilities with exporters. With Prometheus in place, you'll have the ability to proactively identify and address issues, optimize performance, and ensure the stability and reliability of your Linux server environment.
+Implementing Prometheus as your Linux server monitoring solution equips you with powerful tools to keep your infrastructure in check. By following the steps outlined in this guide, you have effectively set up Prometheus, configured it to monitor essential metrics, strengthened security through authentication, and expanded monitoring capabilities with exporters. With Prometheus in place, you now have the ability to proactively identify and address issues, optimize performance, and ensure the stability and reliability of your Linux server environment.
 
 Cover photo by [Safwan Thottoli](https://unsplash.com/@safwan_thottoli?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/3PGJ17syNfQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
