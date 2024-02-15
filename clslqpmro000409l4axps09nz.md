@@ -14,9 +14,9 @@ This guide is for MySQL/MariaDB on Linux servers.
 
 ## **Create a Sync Script**
 
-Instead of creating a development database by typing in commands manually, it is better to create a script. This way, you can sync the development database with the production one at any time with one command.
+Instead of creating a development database by typing in commands manually, you can create a script that will do the tasks for you automatically. This way, you can sync the development database with the production one at any time with one command.
 
-Create a sync script at `/usr/local/bin/sync_dev_db.sh`.
+Create a "sync" script at `/usr/local/bin/sync_dev_db.sh`.
 
 ```bash
 #!/bin/bash
