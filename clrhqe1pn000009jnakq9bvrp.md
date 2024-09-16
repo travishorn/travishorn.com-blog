@@ -8,7 +8,7 @@ tags: mysql, web-development, ssr, nextjs, database-integration
 
 ---
 
-In the world of web development, building dynamic applications often involves connecting to a database to store and retrieve data. Next.js, a popular React framework, provides an excellent platform for creating server-side rendered and statically generated applications. In this article, I'll walk you through the process of seamlessly integrating MySQL, a powerful open-source database management system, with your Next.js app. From installing dependencies to executing raw queries, this comprehensive guide will equip you with the knowledge and skills needed to connect your Next.js app to MySQL and harness the full potential of database-driven applications.
+Building dynamic applications often involves connecting to a database to store and retrieve data. Next.js provides an excellent platform for creating server-side rendered and statically generated applications. In this article, I'll walk you through the process of integrating MySQL with your Next.js app. From installing dependencies to executing raw queries, this comprehensive guide will show you how to connect your Next.js app to MySQL and harness the full potential of database-driven applications.
 
 I'll be using Knex.js. At the time of this writing, Prisma is the hot ORM for JavaScript. While Prisma does have some mind-blowing advantages, I still prefer Knex.js. Mainly for three reasons:
 
@@ -134,6 +134,6 @@ And you can use it to execute raw queries in `getServerSideProps()`.
 const message = await raw("SELECT text FROM Message WHERE id = 1 LIMIT 1;");
 ```
 
-By following this guide, you have learned how to establish a reliable connection between your Next.js app and a MySQL database. You now have the tools to seamlessly interact with the database server-side, retrieve data, and present it to your clients. Whether you are building a small blog or a large-scale application, the ability to integrate databases into your Next.js projects opens up a world of possibilities for data-driven functionality. With your newfound knowledge, you can confidently create feature-rich applications that leverage the power of Next.js and MySQL, taking your web development skills to the next level.
+Now you know how to establish a reliable connection between your Next.js app and a MySQL database. You can interact with the database server-side, retrieve data, and present it to your clients. Whether you are building a small blog or a large-scale application, the ability to integrate databases into your Next.js projects opens up a world of possibilities for data-driven functionality.
 
 Cover photo by [Cai Fang](https://unsplash.com/es/@caipod?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/a-close-up-of-a-building-with-a-clock-on-the-side-of-it-6g0MSzyjWs4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
