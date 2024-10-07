@@ -50,18 +50,18 @@ Installing packages works as usual with `pip install`.
 pip install scikit-learn
 ```
 
-But each time I use `pip install`, I freeze the dependencies into `requirements.txt`.
+But each time I use `pip install`, I freeze the dependencies into `requirements.txt` immediately after.
 
 ```bash
 pip freeze > requirements.txt
 ```
 
-This generates a `requirements.txt` file which lists all the required dependencies.
+This generates a `requirements.txt` file which keeps track all the required dependencies.
 
-Any time I’m pulling in code on a new project, whether it’s my own code or someone else’s, when I see `requirements.txt`, I install the required packages with `pip`.
+Any time I’m pulling in code on a new project, whether it’s my own code or someone else’s, I know when I see `requirements.txt`, that I can install the required packages with `pip`.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Managing dependencies this way is simple, but powerful and it works great for the kinds of projects I work on.
+Managing dependencies this way is simple but powerful and it works great for the kinds of projects I work on.
