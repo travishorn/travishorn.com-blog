@@ -3,7 +3,7 @@ title: "Real-Time Delivery ETA Prediction in Python"
 datePublished: Mon Apr 14 2025 11:00:20 GMT+0000 (Coordinated Universal Time)
 cuid: cm9gypsca001c09l26utn6zau
 slug: real-time-delivery-eta-prediction-in-python
-cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1744590798258/1a505db4-2f35-4324-a9c6-a1c90860ead1.png
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1745024792544/6bf2d314-493c-4c6d-9d57-766a894d512d.png
 tags: realtime, python, machine-learning, predictive-analysis, delivery-management-system
 
 ---
