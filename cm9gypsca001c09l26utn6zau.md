@@ -37,7 +37,7 @@ The entire system hinges on three core Python scripts working together. Let's br
 
 ### Real-Time Data Simulator (`simulator.py`)
 
-Machine learning models need data, and for a real-time system, we need a *stream* of data. Since we don't have access to a fleet of actual delivery drivers, we need to simulate them! That's the job of [`simulator.py`](http://simulator.py).
+Machine learning models need data, and for a real-time system, we need a *stream* of data. Since we don't have access to a fleet of actual delivery drivers, we need to simulate them! That's the job of `simulator.py`.
 
 ```python
 import json
@@ -635,7 +635,7 @@ Before you can train the model, you need some data. Run the simulator to generat
 python src/simulator.py
 ```
 
-**Tip:** To generate data quickly, you can edit [`simulator.py`](http://simulator.py) and set a high `time_acceleration_factor` in the `main` block (e.g., `time_acceleration_factor=60.0` or higher). This makes simulated time pass much faster than real-time.
+**Tip:** To generate data quickly, you can edit `simulator.py` and set a high `time_acceleration_factor` in the `main` block (e.g., `time_acceleration_factor=60.0` or higher). This makes simulated time pass much faster than real-time.
 
 This script will output data points to `delivery_data.jsonl` and print status updates to the console. Let it run until all simulated deliveries are complete. You might want to run it a few times or increase `num_drivers` to generate a larger dataset for potentially better model performance.
 
@@ -659,7 +659,7 @@ Now for the fun part! You'll need two separate terminal windows (make sure your 
     python src/simulator.py
     ```
     
-    **Tip:** For this step, you'll likely want to set `time_acceleration_factor=1.0` in [`simulator.py`](http://simulator.py) so it runs in (simulated) real-time, mimicking a live data feed.
+    **Tip:** For this step, you'll likely want to set `time_acceleration_factor=1.0` in `simulator.py` so it runs in (simulated) real-time, mimicking a live data feed.
     
 * **Terminal 2 - Start the Prediction Service:**
     
@@ -679,7 +679,6 @@ Now, as the simulator (Terminal 1) generates new data points and writes them to 
     Initial ETA: 2025-04-13T19:25:00
     Updated ETA: 2025-04-13T19:45:30 (20.5 min later | DELAYED)
 ----------------------------------------------------------------------------------------------------
-
 ```
 
 And that's it! You now have the simulator feeding data to the predictor, which uses the trained ML model to generate real-time ETA updates.
