@@ -21,51 +21,53 @@ sudo apt install -y mariadb-backup
 
 ### **Create a Backup Script**
 
-Create a backup script at `/usr/local/bin/backup_databases.sh`.
+Create a backup script at `/usr/local/bin/mariadb-backup-job.sh`.
 
 ```bash
 #!/bin/bash
+set -euo pipefail
 
-# Enable errexit so the script stops as soon as it encounters an error
-set -e
+BACKUP_DIR="/var/backups/mariadb"
+mkdir -p "$BACKUP_DIR"
 
-# Create directory for backups
-mkdir -p /var/mariadb/backup
+FILENAME="$BACKUP_DIR/backup_$(date -u +%Y%m%dT%H%M%SZ).gz"
 
-# Store the backup filename
-FILENAME=/var/mariadb/backup/backup_$(date -u +%Y%m%dT%H%M%SZ).gz
-
-# Use mariabackup to create a compressed backup of the database
-mariabackup --user=root --backup --stream=xbstream | gzip > "$FILENAME"
-
-# Was the backup file created?
-if [ -f "$FILENAME" ]; then
-        # Is the file too small to contain data?
-        if [ $(stat -c "%s" "$FILENAME") -lt 100000 ]; then
-                # Remove the junk file. Output error. Exit.
-                rm "$FILENAME"
-                echo "Backup failed: The backup file contained no data" >&2
-                exit 1
-        fi
-else
-        # Output error. Exit.
-        echo "Backup failed: No backup file was created" >&2
-        exit 1
+# Run backup
+if ! mariadb-backup --backup --stream=xbstream | gzip > "$FILENAME"; then
+    echo "Backup failed: mariadb-backup command error" >&2
+    rm -f "$FILENAME"
+    exit 1
 fi
 
-# Count the number of backup files
-NUM_BACKUPS=$(find /var/mariadb/backup -type f -name "backup_*\.gz" | wc -l)
-
-# If there are multiple backup files...
-if [ $NUM_BACKUPS -gt 1 ]; then
-        # Remove backup files that are 14 days old or older
-        find /var/mariadb/backup -type f -name "backup_*\.gz" -mtime +14 -exec rm {} \;
+# Verify file created
+if [ ! -f "$FILENAME" ]; then
+    echo "Backup failed: No backup file created" >&2
+    exit 1
 fi
+
+# Size check
+if [ $(stat -c "%s" "$FILENAME") -lt 100000 ]; then
+    echo "Backup failed: File too small, likely incomplete" >&2
+    rm -f "$FILENAME"
+    exit 1
+fi
+
+# Compression corruption check
+if ! gzip -t "$FILENAME" 2>/dev/null; then
+    echo "Backup failed: Corrupt gzip stream" >&2
+    rm -f "$FILENAME"
+    exit 1
+fi
+
+echo "Backup completed successfully: $FILENAME"
+
+# Purge backups older than 14 days
+find "$BACKUP_DIR" -type f -name "backup_*.gz" -mtime +14 -print -delete
 ```
 
 Some notes about this script:
 
-* It will store backup files at `/var/mariadb/backup`. Feel free to change the path to suit your needs. Be aware that there are multiple places in the script where you'll need to change it.
+* It will store backup files at `/var/backups/mariadb`. Feel free to change the path to suit your needs. Be aware that there are multiple places in the script where you'll need to change it.
     
 * The filename of each backup with be in the format of `backup_20230714T0853Z.gz`. The part after `backup_` is the time the backup was started in UTC. Feel free to change the filename on the `FILENAME=` line.
     
@@ -77,38 +79,34 @@ Some notes about this script:
 Make the script executable.
 
 ```bash
-sudo chmod +x /usr/local/bin/backup_databases.sh
+sudo chmod +x /usr/local/bin/mariadb-backup-job.sh
 ```
 
 ### **Configure Automatic Backups with systemd**
 
 I like to configure database backups to happen automatically on a schedule. My Debian Linux server uses systemd so I leverage it to set a service and a timer to run my backups.
 
-Create `/etc/systemd/system/backup_databases.service`.
+Create `/etc/systemd/system/mariadb-backup-job.service`.
 
 ```bash
 [Unit]
-Description=Backup Databases
+Description=MariaDB Backup Job
 After=mariadb.service
 Requires=mariadb.service
 
 [Service]
-Type=simple
-ExecStart=/usr/local/bin/backup_databases.sh
-
-[Install]
-WantedBy=multi-user.target
+Type=oneshot
+ExecStart=/usr/local/bin/mariadb-backup-job.sh
 ```
 
-Create `/etc/systemd/system/backup_databases.timer`.
+Create `/etc/systemd/system/mariadb-backup-job.timer`.
 
 ```bash
 [Unit]
-Description=Run Database Backup Script Daily
+Description=Run MariaDB Backup Job Daily
 
 [Timer]
 OnCalendar=daily
-AccuracySec=1s
 Persistent=true
 
 [Install]
@@ -133,29 +131,29 @@ sudo systemctl daemon-reload
 Enable the timer so it starts when the system starts.
 
 ```bash
-sudo systemctl enable backup_databases.timer
+sudo systemctl enable mariadb-backup-job.timer
 ```
 
 Start the timer now.
 
 ```bash
-sudo systemctl start backup_databases.timer
+sudo systemctl start mariadb-backup-job.timer
 ```
 
-At this point, all MariaDB databases will be automatically backed up to `/var/mariadb/backup` on the schedule you set.
+At this point, all MariaDB databases will be automatically backed up to `/var/backups/mariadb` on the schedule you set.
 
 ### **Manually Backing Up Databases**
 
 You can back up databases at any time.
 
 ```bash
-sudo mariabackup --user=root --backup --stream=xbstream | sudo gzip > /var/mariadb/backup/backup_$(date -u +%Y%m%dT%H%M%SZ).gz
+sudo mariadb-backup --user=root --backup --stream=xbstream | sudo gzip > /var/backups/mariadb/backup_$(date -u +%Y%m%dT%H%M%SZ).gz
 ```
 
 Or you could run the backup script.
 
 ```bash
-sudo /usr/local/bin/backup_databases.sh
+sudo /usr/local/bin/mariadb-backup-job.sh
 ```
 
 > Running the backup script will run the entire script, including the command which removes backups 14 days or older.
@@ -171,23 +169,23 @@ Before continuing with data recovery, I highly recommend creating a manual backu
 Create a directory for storing the recovered files temporarily.
 
 ```bash
-sudo mkdir /var/mariadb/backup/recovered
+sudo mkdir /var/backups/mariadb/recovered
 ```
 
-You can change `/var/mariadb/backup/recovered` to any directory you like. If you do, make sure to use your directory in all of the following commands.
+You can change `/var/backups/mariadb/recovered` to any directory you like. If you do, make sure to use your directory in all of the following commands.
 
 Unzip the compressed database backup in the directory.
 
 ```bash
-sudo gunzip -c /var/mariadb/backup/backup_20230430T031458Z.gz | sudo mbstream -x --directory=/var/mariadb/backup/recovered
+sudo gunzip -c /var/backups/mariadb/backup_20230430T031458Z.gz | sudo mbstream -x --directory=/var/backups/mariadb/recovered
 ```
 
-Change `/var/mariadb/backup/backup_20230430T031458Z.gz` to the actual path of your backup file.
+Change `/var/backups/mariadb/backup_20230430T031458Z.gz` to the actual path of your backup file.
 
 Prepare the recovery files. This is necessary because files created at backup time are not point-in-time consistent and MariaDB will reject the recovery if not properly prepared.
 
 ```bash
-sudo mariabackup --prepare --target-dir=/var/mariadb/backup/recovered
+sudo mariadb-backup --prepare --target-dir=/var/backups/mariadb/recovered
 ```
 
 Stop MariaDB.
@@ -207,7 +205,7 @@ sudo rm -rf /var/lib/mysql
 Restore the backup files.
 
 ```bash
-sudo mariabackup --copy-back --target-dir=/var/mariadb/backup/recovered
+sudo mariadb-backup --copy-back --target-dir=/var/backups/mariadb/recovered
 ```
 
 Change ownership of the newly recovered files so that the `mysql` user can access them properly.
@@ -227,7 +225,7 @@ The database is now restored to the state it was in when the backup was taken.
 Remove the recovery files as they are no longer needed.
 
 ```bash
-sudo rm -rf /var/mariadb/backup/recovered
+sudo rm -rf /var/backups/mariadb/recovered
 ```
 
 Protecting your data from unforeseen events or accidental corruption is crucial for maintaining the integrity of your database. By following the steps outlined in this comprehensive guide, you can establish a robust backup strategy tailored to your needs. Remember, regularly backing up your data and understanding the recovery process *will* save you from potential headaches and downtime. With the knowledge gained from this article, you are well-equipped to secure your data and confidently navigate data backup and recovery in MariaDB.
