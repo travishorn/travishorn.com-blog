@@ -8,7 +8,7 @@ tags: linux, security, automation, debian, unattendedupgrades
 
 ---
 
-In the dynamic world of Linux, staying up-to-date with software updates and security patches is paramount for a smooth and secure computing experience. However, manually keeping track of updates and performing system reboots can be time-consuming and prone to oversight. Enter **UnattendedUpgrades**, a powerful utility for Debian-based Linux systems that automates the update process, ensuring your system remains current and resilient against emerging vulnerabilities. In this comprehensive guide, we will delve into the installation, activation, and customization of UnattendedUpgrades on Debian Linux, exploring features like modifying update schedules, scheduling reboots, immediate post-upgrade reboots, and manual rebooting. Let's harness the power of automation to simplify your Linux journey and keep your system running seamlessly.
+Staying up-to-date with software updates and security patches is important for a secure computing experience. However, manually keeping track of updates and performing system reboots can be time-consuming and prone to oversight. Enter **UnattendedUpgrades**, a powerful utility for Debian that automates the update process, keeping your system current. In this guide, we will walk through the installation and customization of UnattendedUpgrades on Debian Linux, exploring features like modifying update schedules and scheduling reboots.
 
 ## Installation
 
@@ -35,30 +35,37 @@ It will then apply the upgrades once per day in a random time in a 60 minute win
 
 ## **Modify the Schedule**
 
-You can override the default schedule when upgrades are applied.
+You can override the default schedule when upgrades are *downloaded*.
 
 ```bash
-sudo systemctl edit apt-daily-upgrade.timer
+sudo systemctl edit apt-daily.timer
 ```
 
-An editor will open. In the top section, enter the following.
+And editor will open. In the top section, enter the following.
 
 ```bash
 [Timer]
 OnCalendar=
 OnCalendar=01:00
-RandomizedDelaySec=0
 ```
 
-The above example sets the upgrades to apply precisely at 1 AM every day.
+The above example sets the upgrades to download around 1 AM every day.
 
-The line `OnCalendar=` is necessary because, without it, any additional `OnCalendar` lines simply **add** another time to the existing defaults. This line clears the defaults first.
+The line `OnCalendar=` (blank) is necessary because, without it, any additional `OnCalendar` lines simply **add** another time to the existing defaults. This line clears the defaults first.
 
 Once the overrides are in place, restart the timer.
 
 ```bash
-sudo systemctl restart apt-daily-upgrade.timer
+sudo systemctl restart apt-daily.timer
 ```
+
+You can override the default schedule when upgrades are *applied*, as well.
+
+```bash
+sudo systemctl edit apt-daily-upgrade.timer
+```
+
+Follow the same procedure as when you edited the `apt-daily.timer` above: Write the timer configuration lines and restart the timer.
 
 ## **Scheduled Reboots**
 
@@ -155,6 +162,6 @@ sudo shutdown -r now
 
 Your server is now set up to apply automatic updates.
 
-UnattendedUpgrades on Debian Linux is a game-changer when it comes to automating the update process and enhancing the overall stability and security of your system. By following the steps outlined in this article, you've learned how to install and activate UnattendedUpgrades, customize the update schedule to fit your needs, schedule reboots for minimal disruption, immediately reboot after upgrades, and manually reboot when necessary. Embracing automation frees up your time, reduces the risk of missing critical updates, and ensures your Debian Linux system remains resilient and up-to-date. With UnattendedUpgrades, you can confidently navigate the Linux landscape, knowing that your system is fortified against emerging vulnerabilities while enjoying a seamless and hassle-free computing experience.
+UnattendedUpgrades on Debian Linux is a game-changer when it comes to automating the update process and enhancing the overall stability and security of your system. By following the steps outlined in this article, you've learned how to install and activate UnattendedUpgrades, customize the update schedule to fit your needs, schedule reboots for minimal disruption, immediately reboot after upgrades, and manually reboot when necessary. Automation frees up your time, reduces the risk of missing critical updates, and ensures your Debian Linux system remains resilient and up-to-date. With this setup, you always know that your system is fortified against emerging vulnerabilities.
 
 Cover photo by [Mohamed Nohassi](https://unsplash.com/@coopery?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/a-long-tunnel-with-a-light-at-the-end-of-it-YvoedPdh9JM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
