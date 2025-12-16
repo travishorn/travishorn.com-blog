@@ -1,0 +1,95 @@
+---
+title: "Why Apache is Returning 200 OK Instead of 304 Not Modified"
+datePublished: Tue Dec 16 2025 12:00:28 GMT+0000 (Coordinated Universal Time)
+cuid: cmj8j6oej000102lcbcou6shg
+slug: why-apache-is-returning-200-ok-instead-of-304-not-modified
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1764964609245/37dae7b7-997b-4b15-b8da-c05bfb2403a9.png
+tags: http, compression, caching, apache, etag
+
+---
+
+I recently ran into a frustrating caching issue with Apache. I requested a page where the request headers included `If-Modified-Since` and the response headers included `Last-Modified`. Since the timestamps matched, the server *should* have responded with a **304 Not Modified** (and no content). Instead, it kept responding with a **200 OK** and the full content payload.
+
+Here is how I went down the rabbit hole to fix it.
+
+## How Conditional Requests Work
+
+Before diving into the specific error, it helps to understand the "dance" the browser and server perform to decide whether to download a file again or use the cached version. This mechanism is called a **Conditional GET**.
+
+Ideally, if the browser already has the file, we want the server to respond with a **304 Not Modified** (header only, zero bytes of content) rather than a **200 OK** (which re-sends the entire file).
+
+There are two primary ways validators handle this:
+
+**1\. Time-Based Validation**
+
+* **Server sends:** `Last-Modified` (a timestamp of when the file changed).
+    
+* **Client asks:** `If-Modified-Since` (sending that timestamp back).
+    
+* **Logic:** If the file hasn't changed since that date, return **304**.
+    
+
+**2\. Content-Based Validation (ETags)**
+
+* **Server sends:** `ETag` (a unique hash or fingerprint of the file contents, e.g., `"12345"`).
+    
+* **Client asks:** `If-None-Match` (sending that hash back).
+    
+* **Logic:** If the file's current hash matches the one the client has, return **304**.
+    
+
+Usually, browsers send both. However, HTTP specifications and server configurations often prioritize the **ETag** because it is considered a more accurate validator than a simple timestamp.
+
+## The Investigation
+
+First, I discovered that Apache prioritizes `If-None-Match` over `If-Modified-Since`. My request headers did indeed include `If-None-Match`, and the response headers included an `ETag`. Even though the values seemed to match, I was still getting a **200 OK**.
+
+Then I remembered I had enabled compression (mod\_deflate) using `AddOutputFilterByType`.
+
+It turns out that when Gzip compression is enabled, Apache appends a `-gzip` suffix to the ETag. This suffix was present in both my `If-None-Match` sent by the client and the `ETag` returned by the server. So, why was the cache validation still failing?
+
+## The Root Cause
+
+The issue lies in Apache's order of operations. Apache calculates the ETag for the underlying file and compares it to the client's header *before* it applies compression.
+
+The flow looks like this:
+
+1. **Receive Request:** Client sends `If-None-Match: "12345-gzip"`.
+    
+2. **Calculate ETag:** Apache calculates the ETag for the uncompressed file: `"12345"`.
+    
+3. **Compare:** Apache compares `"12345-gzip"` (Client) vs `"12345"` (Server).
+    
+4. **Result:** No match.
+    
+5. **Process Response:** Apache compresses the file and appends `-gzip` to the ETag.
+    
+6. **Send:** Apache sends **200 OK** with `ETag: "12345-gzip"`.
+    
+
+Because the suffix is added *after* the comparison, the client’s ETag will never match the server’s calculated ETag.
+
+## The Solution
+
+The solution is to simply disable ETags when compression is active, forcing the browser and server to rely on the `If-Modified-Since` header instead.
+
+Inside your `<IfModule mod_deflate.c>` block, add `FileETag None`:
+
+```apache
+<IfModule mod_deflate.c>
+    # ... your compression settings ...
+    AddOutputFilterByType DEFLATE text/plain text/html ...
+    
+    # Disable ETags so the server falls back to Last-Modified
+    FileETag None
+</IfModule>
+  
+```
+
+With ETags removed, the client and server successfully fall back to `If-Modified-Since` and `Last-Modified`. Since those timestamps match, Apache finally respects the cache and returns the elusive **304 Not Modified**.
+
+## Removing ETags is Usually Fine
+
+Disabling a standard HTTP feature like ETags might feel like a drastic measure, but for most static sites, it is actually a safe and often recommended optimization.
+
+The only real downside is that `Last-Modified` has a one-second resolution. It works by checking the file's timestamp. Unless you are modifying the exact same file multiple times within a single second, the timestamp precision is more than enough for browsers to detect changes.
